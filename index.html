@@ -22,7 +22,7 @@
     --cream:#F4EDE4;
     --dim:#B9AED6;
   }
- 
+
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
@@ -38,7 +38,7 @@
     justify-content:center;
     overflow-x:hidden;
   }
- 
+
   .app{
     width:100%;
     max-width:460px;
@@ -47,7 +47,7 @@
     flex-direction:column;
     padding:env(safe-area-inset-top,18px) 16px 18px;
   }
- 
+
   header{ text-align:center; padding:6px 0 14px; }
   .eyebrow{
     font-family:'Space Mono',monospace;
@@ -64,7 +64,7 @@
     letter-spacing:-.01em;
   }
   h1 span{color:var(--violet);}
- 
+
   .tabs{
     display:flex;
     background:var(--ink-2);
@@ -92,7 +92,7 @@
     color:#fff;
     box-shadow:0 4px 14px rgba(139,92,246,.35);
   }
- 
+
   .subline{
     text-align:center;
     font-size:12.5px;
@@ -100,7 +100,7 @@
     margin:2px 0 14px;
     min-height:16px;
   }
- 
+
   /* ---------- TIMER (mimica) ---------- */
   .timer-row{
     display:none;
@@ -129,7 +129,7 @@
     min-width:38px;
     text-align:center;
   }
- 
+
   .stage{
     position:relative;
     flex:1;
@@ -139,7 +139,7 @@
     min-height:360px;
     perspective:1600px;
   }
- 
+
   .deck-shadow{
     position:absolute;
     width:78%;
@@ -151,7 +151,7 @@
   }
   .deck-shadow.s2{ transform:rotate(-7deg) translateY(10px); opacity:.55; }
   .deck-shadow.s1{ transform:rotate(4deg) translateY(4px); opacity:.8; }
- 
+
   .card{
     position:relative;
     width:78%;
@@ -166,7 +166,7 @@
   .card.alarm{ animation:alarm .5s ease 2; }
   @keyframes pulse{ 50%{ transform:scale(.97) rotateY(var(--ry,0deg)); } }
   @keyframes alarm{ 0%,100%{ box-shadow:none; } 50%{ box-shadow:0 0 0 8px rgba(217,73,31,.35); } }
- 
+
   .face{
     position:absolute; inset:0;
     background:var(--paper);
@@ -180,7 +180,7 @@
     color:var(--ink);
   }
   .face.back{ transform:rotateY(180deg); }
- 
+
   .idx{
     font-family:'Space Mono',monospace;
     font-size:12px;
@@ -194,7 +194,7 @@
   .idx .glyph{ font-size:16px; margin-top:1px; }
   .corner-tl{ align-self:flex-start; }
   .corner-br{ align-self:flex-end; transform:rotate(180deg); margin-top:auto; }
- 
+
   .card-body{
     flex:1;
     display:flex;
@@ -221,7 +221,7 @@
   .badge.desafio{ background:rgba(217,73,31,.12); color:var(--coral); }
   .badge.mimica{ background:rgba(139,92,246,.14); color:var(--violet); }
   .badge.resposta{ background:rgba(31,111,99,.12); color:var(--teal); }
- 
+
   .card-text{
     font-family:'Fraunces',serif;
     font-weight:600;
@@ -237,7 +237,7 @@
     color:#8b7f5f;
     margin-top:auto;
   }
- 
+
   .controls{ margin-top:16px; }
   .progress-row{
     display:flex;
@@ -287,7 +287,7 @@
     color:#fff;
     box-shadow:0 8px 20px rgba(139,92,246,.3);
   }
- 
+
   footer{
     text-align:center;
     font-size:10.5px;
@@ -295,7 +295,7 @@
     margin-top:16px;
     letter-spacing:.04em;
   }
- 
+
   .toast{
     position:fixed;
     left:50%; bottom:26px;
@@ -316,25 +316,25 @@
 </style>
 </head>
 <body>
- 
+
 <div class="app">
   <header>
     <div class="eyebrow">Jogo de Cartas</div>
     <h1>Baralho de <span>Festa</span></h1>
   </header>
- 
+
   <div class="tabs">
     <div class="tab active" data-mode="perguntas">Perguntas</div>
     <div class="tab" data-mode="td">V. ou Desafio</div>
     <div class="tab" data-mode="mimica">Mímica</div>
   </div>
   <div class="subline" id="subline">Toque na carta para ver a reação</div>
- 
+
   <div class="timer-row" id="timerRow">
     <button class="timer-btn" id="timerBtn">▶ Iniciar 60s</button>
     <span class="timer-count" id="timerCount">60</span>
   </div>
- 
+
   <div class="stage">
     <div class="deck-shadow s2"></div>
     <div class="deck-shadow s1"></div>
@@ -358,7 +358,7 @@
       </div>
     </div>
   </div>
- 
+
   <div class="controls">
     <div class="progress-row">
       <span id="counter">Carta 1 / 100</span>
@@ -370,12 +370,12 @@
       <button class="act btn-next" id="btnNext">Próxima carta →</button>
     </div>
   </div>
- 
+
   <footer>Deslize, toque e jogue — perguntas para o date · verdade ou desafio · mímica</footer>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 /* ============ PERGUNTAS PARA O DATE ============ */
 const levelMeta = {
@@ -383,7 +383,7 @@ const levelMeta = {
   "Conexão": {cls:"conexao", glyph:"💫", note:"Isso aproxima de verdade 💫"},
   "Picante": {cls:"picante", glyph:"🔥", note:"Uou, esquentou o clima 🔥"}
 };
- 
+
 const perguntas = [
 {level:"Leve",q:"Qual é o seu prato favorito de todos os tempos?"},
 {level:"Leve",q:"Se pudesse morar em qualquer lugar do mundo, onde seria?"},
@@ -486,7 +486,7 @@ const perguntas = [
 {level:"Picante",q:"Você prefere trocar mensagens o dia todo ou esperar o próximo encontro pra conversar?"},
 {level:"Picante",q:"Qual é o próximo passo que você adoraria dar depois desse date?"}
 ];
- 
+
 /* ============ VERDADE OU DESAFIO ============ */
 const verdades = [
 "Qual foi a mentira mais boba que você já contou?",
@@ -540,7 +540,7 @@ const verdades = [
 "Qual foi a última vez que você teve muita vergonha de algo?",
 "Já fingiu estar ocupado só para não sair com alguém?"
 ];
- 
+
 const desafios = [
 "Fale um trava-língua três vezes rápido sem errar.",
 "Imite o jeito de falar de alguém do grupo até adivinharem quem é.",
@@ -593,10 +593,10 @@ const desafios = [
 "Faça uma pose de capa de revista e segure por 10 segundos.",
 "Finja estar em uma entrevista de emprego para ser \"Rei ou Rainha da Festa\"."
 ];
- 
+
 const tdDeck = verdades.map(t => ({kind:"Verdade", text:t}))
   .concat(desafios.map(t => ({kind:"Desafio", text:t})));
- 
+
 /* ============ MÍMICA ============ */
 const mimica = [
 {cat:"Animais",w:"Elefante"},{cat:"Animais",w:"Canguru"},{cat:"Animais",w:"Pinguim"},
@@ -637,7 +637,7 @@ const mimica = [
 {cat:"Lugares",w:"Praia"},{cat:"Lugares",w:"Academia"},{cat:"Lugares",w:"Cinema"},
 {cat:"Lugares",w:"Casamento"},{cat:"Lugares",w:"Aeroporto"}
 ];
- 
+
 /* ============ ESTADO ============ */
 let mode = "perguntas";
 let deckP = shuffle([...perguntas]);
@@ -645,15 +645,15 @@ let deckT = shuffle([...tdDeck]);
 let deckM = shuffle([...mimica]);
 let idx = 0;
 let flipped = false;
- 
+
 let timerInterval = null;
 let timerRunning = false;
 let timerRemaining = 60;
- 
+
 const el = id => document.getElementById(id);
 const card = el("card");
 const toastEl = el("toast");
- 
+
 function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
@@ -661,25 +661,25 @@ function shuffle(arr){
   }
   return arr;
 }
- 
+
 function currentDeck(){
   if(mode === "perguntas") return deckP;
   if(mode === "td") return deckT;
   return deckM;
 }
- 
+
 function render(){
   const deck = currentDeck();
   const item = deck[idx];
   const num = idx + 1;
   const total = deck.length;
- 
+
   el("counter").textContent = `Carta ${num} / ${total}`;
   el("barFill").style.width = (num/total*100) + "%";
- 
+
   [el("numFrontTL"), el("numFrontBR"), el("numBackTL"), el("numBackBR")]
     .forEach(n => n.textContent = num);
- 
+
   if(mode === "perguntas"){
     el("modeLabel").textContent = "PERGUNTAS PARA O DATE";
     el("subline").textContent = "Toque na carta para ver uma reação";
@@ -722,16 +722,16 @@ function render(){
     el("textFront").className = "card-text big";
     el("textFront").textContent = item.w;
   }
- 
+
   updateTimerVisibility();
 }
- 
+
 function flip(){
   if(mode === "mimica") return;
   flipped = !flipped;
   card.classList.toggle("flipped", flipped);
 }
- 
+
 function next(){
   const deck = currentDeck();
   flipped = false;
@@ -747,14 +747,14 @@ function next(){
   setTimeout(()=>card.classList.remove("pulse"), 400);
   render();
 }
- 
+
 function reshuffleCurrent(toast){
   if(mode === "perguntas") deckP = shuffle([...perguntas]);
   else if(mode === "td") deckT = shuffle([...tdDeck]);
   else deckM = shuffle([...mimica]);
   if(toast) showToast("Baralho embaralhado 🔀");
 }
- 
+
 function reshuffle(){
   flipped = false;
   card.classList.remove("flipped");
@@ -763,19 +763,19 @@ function reshuffle(){
   reshuffleCurrent(true);
   render();
 }
- 
+
 function showToast(msg){
   toastEl.textContent = msg;
   toastEl.classList.add("show");
   clearTimeout(showToast._t);
   showToast._t = setTimeout(()=>toastEl.classList.remove("show"), 1600);
 }
- 
+
 /* ---------- TIMER (mímica) ---------- */
 function updateTimerVisibility(){
   el("timerRow").classList.toggle("show", mode === "mimica");
 }
- 
+
 function resetTimer(){
   clearInterval(timerInterval);
   timerInterval = null;
@@ -784,7 +784,7 @@ function resetTimer(){
   el("timerCount").textContent = "60";
   el("timerBtn").textContent = "▶ Iniciar 60s";
 }
- 
+
 function toggleTimer(){
   if(timerRunning){
     resetTimer();
@@ -808,13 +808,13 @@ function toggleTimer(){
     }
   }, 1000);
 }
- 
+
 /* ============ EVENTOS ============ */
 card.addEventListener("click", flip);
 el("btnNext").addEventListener("click", next);
 el("btnShuffle").addEventListener("click", reshuffle);
 el("timerBtn").addEventListener("click", toggleTimer);
- 
+
 document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click", ()=>{
     if(tab.dataset.mode === mode) return;
@@ -828,7 +828,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     render();
   });
 });
- 
+
 /* swipe simples para avançar */
 let touchStartX = 0;
 card.addEventListener("touchstart", e => touchStartX = e.touches[0].clientX, {passive:true});
@@ -836,9 +836,8 @@ card.addEventListener("touchend", e => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   if(Math.abs(dx) > 60) next();
 }, {passive:true});
- 
+
 render();
 </script>
 </body>
 </html>
- 
