@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>Baralho de Festa — Perguntas & Verdade ou Desafio</title>
+<title>Baralho de Festa — Perguntas, Verdade ou Desafio & Mímica</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -22,7 +22,7 @@
     --cream:#F4EDE4;
     --dim:#B9AED6;
   }
-
+ 
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
@@ -38,7 +38,7 @@
     justify-content:center;
     overflow-x:hidden;
   }
-
+ 
   .app{
     width:100%;
     max-width:460px;
@@ -47,12 +47,8 @@
     flex-direction:column;
     padding:env(safe-area-inset-top,18px) 16px 18px;
   }
-
-  /* ---------- HEADER ---------- */
-  header{
-    text-align:center;
-    padding:6px 0 14px;
-  }
+ 
+  header{ text-align:center; padding:6px 0 14px; }
   .eyebrow{
     font-family:'Space Mono',monospace;
     font-size:11px;
@@ -68,8 +64,7 @@
     letter-spacing:-.01em;
   }
   h1 span{color:var(--violet);}
-
-  /* ---------- TABS ---------- */
+ 
   .tabs{
     display:flex;
     background:var(--ink-2);
@@ -77,44 +72,74 @@
     border-radius:999px;
     padding:4px;
     margin:16px 0 6px;
+    gap:2px;
   }
   .tab{
     flex:1;
     text-align:center;
-    padding:11px 8px;
+    padding:10px 4px;
     border-radius:999px;
-    font-size:13.5px;
+    font-size:12px;
     font-weight:600;
     color:var(--dim);
     cursor:pointer;
     transition:all .25s ease;
     user-select:none;
+    white-space:nowrap;
   }
   .tab.active{
     background:linear-gradient(135deg,var(--violet),#6D3FA6);
     color:#fff;
     box-shadow:0 4px 14px rgba(139,92,246,.35);
   }
-
+ 
   .subline{
     text-align:center;
     font-size:12.5px;
     color:var(--dim);
-    margin:2px 0 18px;
+    margin:2px 0 14px;
     min-height:16px;
   }
-
-  /* ---------- CARD STAGE ---------- */
+ 
+  /* ---------- TIMER (mimica) ---------- */
+  .timer-row{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .timer-row.show{ display:flex; }
+  .timer-btn{
+    background:var(--ink-2);
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    font-family:'Space Mono',monospace;
+    font-size:13px;
+    font-weight:700;
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .timer-count{
+    font-family:'Space Mono',monospace;
+    font-size:15px;
+    font-weight:700;
+    color:var(--cream);
+    min-width:38px;
+    text-align:center;
+  }
+ 
   .stage{
     position:relative;
     flex:1;
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height:380px;
+    min-height:360px;
     perspective:1600px;
   }
-
+ 
   .deck-shadow{
     position:absolute;
     width:78%;
@@ -126,7 +151,7 @@
   }
   .deck-shadow.s2{ transform:rotate(-7deg) translateY(10px); opacity:.55; }
   .deck-shadow.s1{ transform:rotate(4deg) translateY(4px); opacity:.8; }
-
+ 
   .card{
     position:relative;
     width:78%;
@@ -138,8 +163,10 @@
   }
   .card.flipped{ transform:rotateY(180deg); }
   .card.pulse{ animation:pulse .4s ease; }
+  .card.alarm{ animation:alarm .5s ease 2; }
   @keyframes pulse{ 50%{ transform:scale(.97) rotateY(var(--ry,0deg)); } }
-
+  @keyframes alarm{ 0%,100%{ box-shadow:none; } 50%{ box-shadow:0 0 0 8px rgba(217,73,31,.35); } }
+ 
   .face{
     position:absolute; inset:0;
     background:var(--paper);
@@ -153,7 +180,7 @@
     color:var(--ink);
   }
   .face.back{ transform:rotateY(180deg); }
-
+ 
   .idx{
     font-family:'Space Mono',monospace;
     font-size:12px;
@@ -167,7 +194,7 @@
   .idx .glyph{ font-size:16px; margin-top:1px; }
   .corner-tl{ align-self:flex-start; }
   .corner-br{ align-self:flex-end; transform:rotate(180deg); margin-top:auto; }
-
+ 
   .card-body{
     flex:1;
     display:flex;
@@ -187,11 +214,14 @@
     border-radius:999px;
     text-transform:uppercase;
   }
-  .badge.perg{ background:rgba(31,111,99,.12); color:var(--teal); }
+  .badge.leve{ background:rgba(31,111,99,.12); color:var(--teal); }
+  .badge.conexao{ background:rgba(109,63,166,.12); color:var(--plum); }
+  .badge.picante{ background:rgba(217,73,31,.12); color:var(--coral); }
   .badge.verdade{ background:rgba(109,63,166,.12); color:var(--plum); }
   .badge.desafio{ background:rgba(217,73,31,.12); color:var(--coral); }
+  .badge.mimica{ background:rgba(139,92,246,.14); color:var(--violet); }
   .badge.resposta{ background:rgba(31,111,99,.12); color:var(--teal); }
-
+ 
   .card-text{
     font-family:'Fraunces',serif;
     font-weight:600;
@@ -199,6 +229,7 @@
     line-height:1.32;
     color:var(--ink);
   }
+  .card-text.big{ font-size:26px; }
   .face.back .card-text{ font-size:19px; }
   .hint{
     font-family:'Inter',sans-serif;
@@ -206,11 +237,8 @@
     color:#8b7f5f;
     margin-top:auto;
   }
-
-  /* ---------- CONTROLS ---------- */
-  .controls{
-    margin-top:18px;
-  }
+ 
+  .controls{ margin-top:16px; }
   .progress-row{
     display:flex;
     align-items:center;
@@ -233,10 +261,7 @@
     border-radius:999px;
     transition:width .3s ease;
   }
-  .btn-row{
-    display:flex;
-    gap:10px;
-  }
+  .btn-row{ display:flex; gap:10px; }
   button.act{
     flex:1;
     border:none;
@@ -262,7 +287,7 @@
     color:#fff;
     box-shadow:0 8px 20px rgba(139,92,246,.3);
   }
-
+ 
   footer{
     text-align:center;
     font-size:10.5px;
@@ -270,7 +295,7 @@
     margin-top:16px;
     letter-spacing:.04em;
   }
-
+ 
   .toast{
     position:fixed;
     left:50%; bottom:26px;
@@ -285,24 +310,31 @@
     pointer-events:none;
     transition:all .3s ease;
     z-index:20;
+    white-space:nowrap;
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
-
+ 
 <div class="app">
   <header>
     <div class="eyebrow">Jogo de Cartas</div>
     <h1>Baralho de <span>Festa</span></h1>
   </header>
-
+ 
   <div class="tabs">
     <div class="tab active" data-mode="perguntas">Perguntas</div>
-    <div class="tab" data-mode="td">Verdade ou Desafio</div>
+    <div class="tab" data-mode="td">V. ou Desafio</div>
+    <div class="tab" data-mode="mimica">Mímica</div>
   </div>
-  <div class="subline" id="subline">Toque na carta para revelar a resposta</div>
-
+  <div class="subline" id="subline">Toque na carta para ver a reação</div>
+ 
+  <div class="timer-row" id="timerRow">
+    <button class="timer-btn" id="timerBtn">▶ Iniciar 60s</button>
+    <span class="timer-count" id="timerCount">60</span>
+  </div>
+ 
   <div class="stage">
     <div class="deck-shadow s2"></div>
     <div class="deck-shadow s1"></div>
@@ -310,7 +342,7 @@
       <div class="face front">
         <div class="idx corner-tl"><span id="numFrontTL">1</span><span class="glyph" id="glyphFrontTL">?</span></div>
         <div class="card-body">
-          <div class="badge perg" id="badgeFront">Geografia</div>
+          <div class="badge leve" id="badgeFront">Leve</div>
           <div class="card-text" id="textFront">Carregando...</div>
         </div>
         <div class="idx corner-br"><span id="numFrontBR">1</span><span class="glyph" id="glyphFrontBR">?</span></div>
@@ -318,7 +350,7 @@
       <div class="face back">
         <div class="idx corner-tl"><span id="numBackTL">1</span><span class="glyph" id="glyphBackTL">✓</span></div>
         <div class="card-body">
-          <div class="badge resposta" id="badgeBack">Resposta</div>
+          <div class="badge resposta" id="badgeBack">Reação</div>
           <div class="card-text" id="textBack">—</div>
           <div class="hint" id="hintBack">Toque para voltar</div>
         </div>
@@ -326,7 +358,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="controls">
     <div class="progress-row">
       <span id="counter">Carta 1 / 100</span>
@@ -338,117 +370,124 @@
       <button class="act btn-next" id="btnNext">Próxima carta →</button>
     </div>
   </div>
-
-  <footer>Deslize, toque e jogue — 100 perguntas · 100 cartas de verdade ou desafio</footer>
+ 
+  <footer>Deslize, toque e jogue — perguntas para o date · verdade ou desafio · mímica</footer>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
-/* ============ DADOS ============ */
+/* ============ PERGUNTAS PARA O DATE ============ */
+const levelMeta = {
+  "Leve":    {cls:"leve",    glyph:"💬", note:"Adorei saber isso sobre você 😊"},
+  "Conexão": {cls:"conexao", glyph:"💫", note:"Isso aproxima de verdade 💫"},
+  "Picante": {cls:"picante", glyph:"🔥", note:"Uou, esquentou o clima 🔥"}
+};
+ 
 const perguntas = [
-{c:"Geografia",q:"Qual é o maior país do mundo em área territorial?",a:"Rússia"},
-{c:"Geografia",q:"Qual é o rio mais longo do mundo?",a:"Rio Nilo"},
-{c:"Geografia",q:"Qual é a capital da Austrália?",a:"Camberra"},
-{c:"Geografia",q:"Em qual continente fica o Egito?",a:"África"},
-{c:"Geografia",q:"Qual é o menor país do mundo?",a:"Vaticano"},
-{c:"Geografia",q:"Qual é o maior oceano do planeta?",a:"Oceano Pacífico"},
-{c:"Geografia",q:"Qual é a cordilheira mais extensa do mundo?",a:"Cordilheira dos Andes"},
-{c:"Geografia",q:"Quantos países fazem fronteira com o Brasil?",a:"10 países"},
-{c:"Geografia",q:"Qual é o maior deserto quente do mundo?",a:"Deserto do Saara"},
-{c:"Geografia",q:"Qual país europeu tem o formato de uma bota?",a:"Itália"},
-{c:"História",q:"Em que ano começou a Segunda Guerra Mundial?",a:"1939"},
-{c:"História",q:"Quem foi o primeiro presidente do Brasil?",a:"Marechal Deodoro da Fonseca"},
-{c:"História",q:"Em que ano os portugueses chegaram ao Brasil?",a:"1500"},
-{c:"História",q:"Qual civilização construiu as pirâmides de Gizé?",a:"Os egípcios antigos"},
-{c:"História",q:"Em que ano caiu o Muro de Berlim?",a:"1989"},
-{c:"História",q:"Qual foi a primeira capital do Brasil?",a:"Salvador"},
-{c:"História",q:"Quem assinou a Lei Áurea, que aboliu a escravidão no Brasil?",a:"A Princesa Isabel"},
-{c:"História",q:"Em que século viveu Napoleão Bonaparte?",a:"Séculos XVIII e XIX"},
-{c:"História",q:"Qual evento é considerado o marco do início da Idade Moderna?",a:"A Queda de Constantinopla, em 1453"},
-{c:"História",q:"Qual era o nome do navio que trouxe Cabral ao Brasil?",a:"A esquadra era liderada pela nau capitânia de Cabral"},
-{c:"Ciência",q:"Qual é o planeta mais próximo do Sol?",a:"Mercúrio"},
-{c:"Ciência",q:"Qual é o elemento químico mais abundante no universo?",a:"Hidrogênio"},
-{c:"Ciência",q:"Quantos ossos tem o corpo humano adulto?",a:"206 ossos"},
-{c:"Ciência",q:"Qual é a velocidade aproximada da luz?",a:"Cerca de 300 mil km por segundo"},
-{c:"Ciência",q:"Quem propôs a Teoria da Relatividade?",a:"Albert Einstein"},
-{c:"Ciência",q:"Qual é o maior órgão do corpo humano?",a:"A pele"},
-{c:"Ciência",q:"Qual gás os humanos exalam ao respirar?",a:"Gás carbônico (CO2)"},
-{c:"Ciência",q:"Qual é a fórmula química da água?",a:"H2O"},
-{c:"Ciência",q:"Quantos planetas existem no Sistema Solar?",a:"8 planetas"},
-{c:"Ciência",q:"Qual é o animal terrestre mais rápido do mundo?",a:"O guepardo"},
-{c:"Cinema & Séries",q:"Quem dirigiu o filme \"Tubarão\"?",a:"Steven Spielberg"},
-{c:"Cinema & Séries",q:"Em qual trilogia aparece o personagem Frodo Bolseiro?",a:"O Senhor dos Anéis"},
-{c:"Cinema & Séries",q:"Qual ator interpretou o Coringa no filme de 2019?",a:"Joaquin Phoenix"},
-{c:"Cinema & Séries",q:"Qual série retrata a cidade fictícia de Hawkins?",a:"Stranger Things"},
-{c:"Cinema & Séries",q:"Qual filme venceu o Oscar de Melhor Filme em 2020?",a:"Parasita"},
-{c:"Cinema & Séries",q:"Quem interpreta Tony Stark nos filmes da Marvel?",a:"Robert Downey Jr."},
-{c:"Cinema & Séries",q:"Qual professor de Hogwarts foi interpretado por Alan Rickman?",a:"Severo Snape"},
-{c:"Cinema & Séries",q:"Em que ano foi lançado o primeiro filme de Toy Story?",a:"1995"},
-{c:"Cinema & Séries",q:"Qual estúdio de animação criou \"Divertida Mente\"?",a:"Pixar"},
-{c:"Cinema & Séries",q:"Qual é o apelido do líder do grupo em \"La Casa de Papel\"?",a:"Professor"},
-{c:"Música",q:"Qual banda gravou o álbum \"Abbey Road\"?",a:"The Beatles"},
-{c:"Música",q:"Quem é conhecida como a \"Rainha do Pop\"?",a:"Madonna"},
-{c:"Música",q:"Qual cantor lançou o álbum \"Thriller\"?",a:"Michael Jackson"},
-{c:"Música",q:"Quantas cordas tem um violão clássico?",a:"6 cordas"},
-{c:"Música",q:"Qual gênero musical nasceu no Rio de Janeiro?",a:"Samba"},
-{c:"Música",q:"Qual instrumento acompanha a sanfona e o triângulo no forró?",a:"O zabumba"},
-{c:"Música",q:"Qual banda brasileira canta \"Tempo Perdido\"?",a:"Legião Urbana"},
-{c:"Música",q:"Qual famoso festival de música dos EUA aconteceu em 1969?",a:"Woodstock"},
-{c:"Música",q:"Quantas teclas tem um piano padrão?",a:"88 teclas"},
-{c:"Música",q:"Qual cantor brasileiro ficou famoso com \"Ai Se Eu Te Pego\"?",a:"Michel Teló"},
-{c:"Esportes",q:"Quantos jogadores um time de futebol tem em campo?",a:"11 jogadores"},
-{c:"Esportes",q:"Quantas vezes o Brasil já foi campeão da Copa do Mundo?",a:"5 vezes"},
-{c:"Esportes",q:"Em qual esporte se usa o termo \"ace\"?",a:"Tênis"},
-{c:"Esportes",q:"Qual país sediou as Olimpíadas de 2016?",a:"Brasil"},
-{c:"Esportes",q:"Quantos quartos tem uma partida oficial de basquete na NBA?",a:"4 quartos"},
-{c:"Esportes",q:"Qual é o nome do troféu da Copa do Mundo de futebol?",a:"Taça FIFA"},
-{c:"Esportes",q:"Em qual esporte Ayrton Senna se destacou?",a:"Fórmula 1"},
-{c:"Esportes",q:"Quantos pontos vale uma cesta de três no basquete?",a:"3 pontos"},
-{c:"Esportes",q:"Qual país tem o maior número de medalhas olímpicas da história?",a:"Estados Unidos"},
-{c:"Esportes",q:"Qual é o número máximo de sets em uma partida de vôlei?",a:"5 sets"},
-{c:"Literatura",q:"Quem escreveu \"Dom Casmurro\"?",a:"Machado de Assis"},
-{c:"Literatura",q:"Quem escreveu o romance \"1984\"?",a:"George Orwell"},
-{c:"Literatura",q:"Qual autor criou o detetive Sherlock Holmes?",a:"Arthur Conan Doyle"},
-{c:"Literatura",q:"Quem escreveu \"Cem Anos de Solidão\"?",a:"Gabriel García Márquez"},
-{c:"Literatura",q:"Qual é o nome do bruxo criado por J.K. Rowling?",a:"Harry Potter"},
-{c:"Tecnologia",q:"Quem fundou a Microsoft?",a:"Bill Gates"},
-{c:"Tecnologia",q:"O que significa a sigla \"www\"?",a:"World Wide Web"},
-{c:"Tecnologia",q:"Qual empresa criou o iPhone?",a:"Apple"},
-{c:"Tecnologia",q:"Qual linguagem de programação é a mais usada em navegadores web?",a:"JavaScript"},
-{c:"Tecnologia",q:"O que significa a sigla \"IA\"?",a:"Inteligência Artificial"},
-{c:"Animais",q:"Qual é o maior mamífero do mundo?",a:"A baleia-azul"},
-{c:"Animais",q:"Quantos corações tem um polvo?",a:"3 corações"},
-{c:"Animais",q:"Qual é a ave símbolo nacional do Brasil?",a:"O sabiá-laranjeira"},
-{c:"Animais",q:"Qual é o único mamífero capaz de voar de verdade?",a:"O morcego"},
-{c:"Animais",q:"Qual é o maior réptil vivo do mundo?",a:"O crocodilo-de-água-salgada"},
-{c:"Curiosidades",q:"Quantos minutos tem uma hora?",a:"60 minutos"},
-{c:"Curiosidades",q:"Qual cor surge da mistura de azul e amarelo?",a:"Verde"},
-{c:"Curiosidades",q:"Quantos lados tem um hexágono?",a:"6 lados"},
-{c:"Curiosidades",q:"Qual é o único metal líquido à temperatura ambiente?",a:"Mercúrio"},
-{c:"Curiosidades",q:"Quantas letras tem o alfabeto português atual?",a:"26 letras"},
-{c:"Curiosidades",q:"Qual é a moeda oficial do Japão?",a:"Iene"},
-{c:"Curiosidades",q:"Quantos dias tem um ano bissexto?",a:"366 dias"},
-{c:"Curiosidades",q:"Qual é o maior deserto de gelo do mundo?",a:"A Antártida"},
-{c:"Curiosidades",q:"Quantas cores tem o arco-íris?",a:"7 cores"},
-{c:"Curiosidades",q:"Quem foi o primeiro homem a pisar na Lua?",a:"Neil Armstrong"},
-{c:"Brasil",q:"Qual é a capital do Brasil?",a:"Brasília"},
-{c:"Brasil",q:"Quem projetou os principais prédios de Brasília?",a:"Oscar Niemeyer"},
-{c:"Brasil",q:"Qual é o maior estado brasileiro em área?",a:"Amazonas"},
-{c:"Brasil",q:"Em quais meses o Carnaval costuma acontecer?",a:"Entre fevereiro e março, geralmente"},
-{c:"Brasil",q:"Qual estátua fica no alto do Corcovado, no Rio de Janeiro?",a:"O Cristo Redentor"},
-{c:"Brasil",q:"Qual é a moeda oficial do Brasil?",a:"Real"},
-{c:"Brasil",q:"Quantos estados tem o Brasil, sem contar o Distrito Federal?",a:"26 estados"},
-{c:"Brasil",q:"Qual é o prato típico feito de feijão preto com carnes?",a:"Feijoada"},
-{c:"Brasil",q:"Qual escritor fundou a Academia Brasileira de Letras?",a:"Machado de Assis"},
-{c:"Brasil",q:"Qual é o maior bioma brasileiro em extensão?",a:"Amazônia"},
-{c:"Comida",q:"De qual país é originária a pizza?",a:"Itália"},
-{c:"Comida",q:"Qual fruta é usada para fazer vinho?",a:"Uva"},
-{c:"Comida",q:"Qual é o ingrediente principal do guacamole?",a:"Abacate"},
-{c:"Comida",q:"De qual país o sushi é originário?",a:"Japão"},
-{c:"Comida",q:"Qual doce brasileiro é feito de leite condensado, chocolate e granulado?",a:"Brigadeiro"}
+{level:"Leve",q:"Qual é o seu prato favorito de todos os tempos?"},
+{level:"Leve",q:"Se pudesse morar em qualquer lugar do mundo, onde seria?"},
+{level:"Leve",q:"Qual foi a última série que você maratonou?"},
+{level:"Leve",q:"Praia ou montanha?"},
+{level:"Leve",q:"Qual é a sua música favorita para ouvir dirigindo?"},
+{level:"Leve",q:"Você prefere café ou chá?"},
+{level:"Leve",q:"Qual foi a viagem mais marcante que você já fez?"},
+{level:"Leve",q:"Se pudesse ter um superpoder, qual escolheria?"},
+{level:"Leve",q:"Qual é o seu hobby favorito nas horas vagas?"},
+{level:"Leve",q:"Você é mais de acordar cedo ou dormir tarde?"},
+{level:"Leve",q:"Qual foi o melhor presente que você já recebeu?"},
+{level:"Leve",q:"Se pudesse jantar com qualquer pessoa, viva ou morta, quem seria?"},
+{level:"Leve",q:"Qual é o seu filme favorito de todos os tempos?"},
+{level:"Leve",q:"Gato ou cachorro?"},
+{level:"Leve",q:"Qual é a sua comida de conforto favorita?"},
+{level:"Leve",q:"Qual foi seu maior hobby na infância?"},
+{level:"Leve",q:"Você prefere cidade grande ou lugar tranquilo?"},
+{level:"Leve",q:"Qual é a sua estação do ano favorita?"},
+{level:"Leve",q:"Se pudesse aprender uma habilidade nova amanhã, qual seria?"},
+{level:"Leve",q:"Qual é a sua bebida favorita num happy hour?"},
+{level:"Leve",q:"Você já morou fora da cidade onde nasceu?"},
+{level:"Leve",q:"Qual é o seu esporte favorito, pra assistir ou praticar?"},
+{level:"Leve",q:"Se ganhasse na loteria hoje, o que faria primeiro?"},
+{level:"Leve",q:"Qual é o seu tipo de humor favorito?"},
+{level:"Leve",q:"Você prefere planejar tudo ou ser mais espontâneo(a)?"},
+{level:"Leve",q:"Qual foi o último livro que você leu?"},
+{level:"Leve",q:"Qual é a sua lembrança de infância favorita?"},
+{level:"Leve",q:"Você se considera mais introvertido(a) ou extrovertido(a)?"},
+{level:"Leve",q:"Qual é o destino dos sonhos que você quer visitar?"},
+{level:"Leve",q:"Qual foi o show ou evento mais legal que você já foi?"},
+{level:"Leve",q:"Qual é a sua sobremesa favorita?"},
+{level:"Leve",q:"Você prefere sair pra jantar ou cozinhar em casa?"},
+{level:"Leve",q:"Qual é a sua playlist do momento?"},
+{level:"Leve",q:"Se pudesse ter qualquer talento, qual escolheria?"},
+{level:"Leve",q:"Qual é o seu jeito favorito de relaxar depois de um dia cheio?"},
+{level:"Leve",q:"Você tem algum talento escondido?"},
+{level:"Leve",q:"Qual é o seu lugar favorito na cidade onde mora?"},
+{level:"Leve",q:"Qual foi a coisa mais aleatória que você aprendeu recentemente?"},
+{level:"Leve",q:"Qual é a sua ideia de um fim de semana perfeito?"},
+{level:"Leve",q:"Qual é o seu maior orgulho até hoje?"},
+{level:"Conexão",q:"O que te faz se sentir realmente à vontade com alguém?"},
+{level:"Conexão",q:"Qual é a qualidade que você mais valoriza em uma pessoa?"},
+{level:"Conexão",q:"O que te deixa mais nervoso(a) no começo de uma conexão?"},
+{level:"Conexão",q:"Qual foi a lição mais importante que um relacionamento já te ensinou?"},
+{level:"Conexão",q:"Como você prefere receber carinho: palavras, toque, gestos ou atenção?"},
+{level:"Conexão",q:"O que te faz sentir admirado(a) por alguém?"},
+{level:"Conexão",q:"Qual é o seu maior sonho pra daqui a 5 anos?"},
+{level:"Conexão",q:"O que você não abre mão em um relacionamento?"},
+{level:"Conexão",q:"Qual foi um momento em que você se sentiu verdadeiramente feliz recentemente?"},
+{level:"Conexão",q:"O que te atrai primeiro em alguém: a conversa, o jeito de ser ou a aparência?"},
+{level:"Conexão",q:"Você acredita mais em química instantânea ou em construção aos poucos?"},
+{level:"Conexão",q:"Qual foi o maior aprendizado que você tirou de um término?"},
+{level:"Conexão",q:"O que te faz sentir seguro(a) numa conexão com alguém?"},
+{level:"Conexão",q:"Qual é o seu maior medo em se envolver com alguém novo?"},
+{level:"Conexão",q:"O que você espera de um parceiro ou parceira ideal?"},
+{level:"Conexão",q:"Como você lida quando discorda de alguém que gosta?"},
+{level:"Conexão",q:"Qual foi a última vez que você se sentiu vulnerável com alguém?"},
+{level:"Conexão",q:"O que faz você se sentir valorizado(a) numa relação?"},
+{level:"Conexão",q:"Qual é a sua definição de um date perfeito?"},
+{level:"Conexão",q:"O que você mudaria em si mesmo(a) se pudesse?"},
+{level:"Conexão",q:"Qual foi um momento em que alguém te surpreendeu positivamente?"},
+{level:"Conexão",q:"Você prefere conversas profundas ou leves no início de uma conexão?"},
+{level:"Conexão",q:"O que te faz confiar em alguém?"},
+{level:"Conexão",q:"Qual é a coisa mais importante que você aprendeu sobre si mesmo(a) nos últimos anos?"},
+{level:"Conexão",q:"O que você considera um deal-breaker em um relacionamento?"},
+{level:"Conexão",q:"Como você demonstra interesse por alguém que gosta?"},
+{level:"Conexão",q:"Qual foi a última vez que você se apaixonou de verdade?"},
+{level:"Conexão",q:"O que te faz sentir conectado(a) com alguém logo de cara?"},
+{level:"Conexão",q:"Você prefere surpresas ou planos combinados?"},
+{level:"Conexão",q:"O que você gostaria que a pessoa ao seu lado soubesse sobre você agora?"},
+{level:"Conexão",q:"Qual é o seu maior valor inegociável na vida?"},
+{level:"Conexão",q:"O que te deixa mais confortável para se abrir com alguém?"},
+{level:"Conexão",q:"Qual conselho você daria pra você mesmo(a) de 5 anos atrás?"},
+{level:"Conexão",q:"O que te faz sentir orgulho de quem você se tornou?"},
+{level:"Conexão",q:"Qual é a coisa que você mais gostaria de fazer, mas ainda não teve coragem?"},
+{level:"Picante",q:"Qual é o seu maior charme, na sua opinião?"},
+{level:"Picante",q:"O que te chama mais atenção num primeiro encontro?"},
+{level:"Picante",q:"Qual foi o flerte mais ousado que você já fez?"},
+{level:"Picante",q:"O que você acha mais atraente em quem está na sua frente agora?"},
+{level:"Picante",q:"Qual é a sua ideia de um encontro perfeito, sem economizar no clima?"},
+{level:"Picante",q:"Você prefere um beijo surpresa ou combinado?"},
+{level:"Picante",q:"O que te deixa com borboletas no estômago?"},
+{level:"Picante",q:"Qual é o maior elogio que você já recebeu e nunca esqueceu?"},
+{level:"Picante",q:"Você acredita em amor à primeira vista ou em paixão que cresce aos poucos?"},
+{level:"Picante",q:"O que faz você se sentir mais desejado(a)?"},
+{level:"Picante",q:"Qual seria o cenário perfeito pra um segundo encontro?"},
+{level:"Picante",q:"O que te deixaria sem graça, mas animado(a), nesse date?"},
+{level:"Picante",q:"Qual é a coisa mais romântica que já fizeram por você?"},
+{level:"Picante",q:"Você é mais de olhar fixo ou de puxar assunto pra quebrar o gelo?"},
+{level:"Picante",q:"O que você faria se tivesse coragem de tudo nesse date?"},
+{level:"Picante",q:"Qual é o seu tipo físico favorito, sem vergonha de admitir?"},
+{level:"Picante",q:"O que faria você se apaixonar ainda mais numa segunda saída?"},
+{level:"Picante",q:"Você prefere um clima de mistério ou tudo em aberto desde o início?"},
+{level:"Picante",q:"Qual música colocaria pra criar clima num jantar a dois?"},
+{level:"Picante",q:"O que você acha mais sedutor: inteligência, humor ou confiança?"},
+{level:"Picante",q:"Se esse date fosse perfeito, como ele terminaria?"},
+{level:"Picante",q:"Qual foi o encontro mais inesquecível que você já teve?"},
+{level:"Picante",q:"O que faz alguém ser inesquecível pra você depois de um encontro?"},
+{level:"Picante",q:"Você prefere trocar mensagens o dia todo ou esperar o próximo encontro pra conversar?"},
+{level:"Picante",q:"Qual é o próximo passo que você adoraria dar depois desse date?"}
 ];
-
+ 
+/* ============ VERDADE OU DESAFIO ============ */
 const verdades = [
 "Qual foi a mentira mais boba que você já contou?",
 "Já fingiu estar doente para faltar a um compromisso?",
@@ -501,7 +540,7 @@ const verdades = [
 "Qual foi a última vez que você teve muita vergonha de algo?",
 "Já fingiu estar ocupado só para não sair com alguém?"
 ];
-
+ 
 const desafios = [
 "Fale um trava-língua três vezes rápido sem errar.",
 "Imite o jeito de falar de alguém do grupo até adivinharem quem é.",
@@ -554,21 +593,67 @@ const desafios = [
 "Faça uma pose de capa de revista e segure por 10 segundos.",
 "Finja estar em uma entrevista de emprego para ser \"Rei ou Rainha da Festa\"."
 ];
-
+ 
 const tdDeck = verdades.map(t => ({kind:"Verdade", text:t}))
   .concat(desafios.map(t => ({kind:"Desafio", text:t})));
-
+ 
+/* ============ MÍMICA ============ */
+const mimica = [
+{cat:"Animais",w:"Elefante"},{cat:"Animais",w:"Canguru"},{cat:"Animais",w:"Pinguim"},
+{cat:"Animais",w:"Girafa"},{cat:"Animais",w:"Macaco"},{cat:"Animais",w:"Tubarão"},
+{cat:"Animais",w:"Coruja"},{cat:"Animais",w:"Cavalo"},{cat:"Animais",w:"Cobra"},
+{cat:"Animais",w:"Águia"},{cat:"Animais",w:"Sapo"},{cat:"Animais",w:"Tartaruga"},
+{cat:"Animais",w:"Leão"},{cat:"Animais",w:"Borboleta"},{cat:"Animais",w:"Polvo"},
+{cat:"Profissões",w:"Bombeiro"},{cat:"Profissões",w:"Professor"},{cat:"Profissões",w:"Médico"},
+{cat:"Profissões",w:"Cozinheiro"},{cat:"Profissões",w:"Cabeleireiro"},{cat:"Profissões",w:"Piloto de avião"},
+{cat:"Profissões",w:"Policial"},{cat:"Profissões",w:"Pescador"},{cat:"Profissões",w:"Fotógrafo"},
+{cat:"Profissões",w:"DJ"},
+{cat:"Ações",w:"Dançar"},{cat:"Ações",w:"Nadar"},{cat:"Ações",w:"Escovar os dentes"},
+{cat:"Ações",w:"Dirigir"},{cat:"Ações",w:"Tocar violão"},{cat:"Ações",w:"Pescar"},
+{cat:"Ações",w:"Jogar futebol"},{cat:"Ações",w:"Cozinhar"},{cat:"Ações",w:"Dormir"},
+{cat:"Ações",w:"Correr"},{cat:"Ações",w:"Pular corda"},{cat:"Ações",w:"Assar um bolo"},
+{cat:"Ações",w:"Pintar um quadro"},{cat:"Ações",w:"Andar de bicicleta"},{cat:"Ações",w:"Surfar"},
+{cat:"Objetos",w:"Guarda-chuva"},{cat:"Objetos",w:"Liquidificador"},{cat:"Objetos",w:"Escova de dentes"},
+{cat:"Objetos",w:"Celular"},{cat:"Objetos",w:"Fone de ouvido"},{cat:"Objetos",w:"Óculos de sol"},
+{cat:"Objetos",w:"Mochila"},{cat:"Objetos",w:"Ventilador"},{cat:"Objetos",w:"Chave"},
+{cat:"Objetos",w:"Relógio"},{cat:"Objetos",w:"Espelho"},{cat:"Objetos",w:"Secador de cabelo"},
+{cat:"Objetos",w:"Bicicleta"},{cat:"Objetos",w:"Sofá"},{cat:"Objetos",w:"Geladeira"},
+{cat:"Filmes & Séries",w:"Tubarão"},{cat:"Filmes & Séries",w:"Titanic"},{cat:"Filmes & Séries",w:"Jurassic Park"},
+{cat:"Filmes & Séries",w:"Toy Story"},{cat:"Filmes & Séries",w:"Matrix"},{cat:"Filmes & Séries",w:"Vingadores"},
+{cat:"Filmes & Séries",w:"Frozen"},{cat:"Filmes & Séries",w:"Stranger Things"},{cat:"Filmes & Séries",w:"La Casa de Papel"},
+{cat:"Filmes & Séries",w:"Shrek"},
+{cat:"Personagens",w:"Batman"},{cat:"Personagens",w:"Homem-Aranha"},{cat:"Personagens",w:"Branca de Neve"},
+{cat:"Personagens",w:"Chapeuzinho Vermelho"},{cat:"Personagens",w:"Pinóquio"},{cat:"Personagens",w:"Sherlock Holmes"},
+{cat:"Personagens",w:"Chaves"},{cat:"Personagens",w:"Bob Esponja"},{cat:"Personagens",w:"Mulher Maravilha"},
+{cat:"Personagens",w:"Pica-Pau"},
+{cat:"Esportes",w:"Futebol"},{cat:"Esportes",w:"Vôlei"},{cat:"Esportes",w:"Boxe"},
+{cat:"Esportes",w:"Surfe"},{cat:"Esportes",w:"Skate"},{cat:"Esportes",w:"Natação"},
+{cat:"Esportes",w:"Basquete"},{cat:"Esportes",w:"Tênis"},{cat:"Esportes",w:"Judô"},
+{cat:"Esportes",w:"Ciclismo"},
+{cat:"Emoções",w:"Com muito sono"},{cat:"Emoções",w:"Com muita raiva"},{cat:"Emoções",w:"Apaixonado(a)"},
+{cat:"Emoções",w:"Assustado(a)"},{cat:"Emoções",w:"Envergonhado(a)"},{cat:"Emoções",w:"Muito animado(a)"},
+{cat:"Emoções",w:"Com fome"},{cat:"Emoções",w:"Nervoso(a) antes de uma prova"},{cat:"Emoções",w:"Aliviado(a)"},
+{cat:"Emoções",w:"Orgulhoso(a)"},
+{cat:"Lugares",w:"Praia"},{cat:"Lugares",w:"Academia"},{cat:"Lugares",w:"Cinema"},
+{cat:"Lugares",w:"Casamento"},{cat:"Lugares",w:"Aeroporto"}
+];
+ 
 /* ============ ESTADO ============ */
 let mode = "perguntas";
 let deckP = shuffle([...perguntas]);
 let deckT = shuffle([...tdDeck]);
+let deckM = shuffle([...mimica]);
 let idx = 0;
 let flipped = false;
-
+ 
+let timerInterval = null;
+let timerRunning = false;
+let timerRemaining = 60;
+ 
 const el = id => document.getElementById(id);
 const card = el("card");
 const toastEl = el("toast");
-
+ 
 function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
@@ -576,38 +661,44 @@ function shuffle(arr){
   }
   return arr;
 }
-
-function currentDeck(){ return mode === "perguntas" ? deckP : deckT; }
-
+ 
+function currentDeck(){
+  if(mode === "perguntas") return deckP;
+  if(mode === "td") return deckT;
+  return deckM;
+}
+ 
 function render(){
   const deck = currentDeck();
   const item = deck[idx];
   const num = idx + 1;
   const total = deck.length;
-
+ 
   el("counter").textContent = `Carta ${num} / ${total}`;
-  el("modeLabel").textContent = mode === "perguntas" ? "PERGUNTAS" : "VERDADE OU DESAFIO";
   el("barFill").style.width = (num/total*100) + "%";
-  el("subline").textContent = mode === "perguntas"
-    ? "Toque na carta para revelar a resposta"
-    : "Toque na carta e cumpra o combinado";
-
+ 
   [el("numFrontTL"), el("numFrontBR"), el("numBackTL"), el("numBackBR")]
     .forEach(n => n.textContent = num);
-
+ 
   if(mode === "perguntas"){
-    el("glyphFrontTL").textContent = "?";
-    el("glyphFrontBR").textContent = "?";
-    el("glyphBackTL").textContent = "✓";
-    el("glyphBackBR").textContent = "✓";
-    el("badgeFront").className = "badge perg";
-    el("badgeFront").textContent = item.c;
+    el("modeLabel").textContent = "PERGUNTAS PARA O DATE";
+    el("subline").textContent = "Toque na carta para ver uma reação";
+    const meta = levelMeta[item.level];
+    el("glyphFrontTL").textContent = meta.glyph;
+    el("glyphFrontBR").textContent = meta.glyph;
+    el("glyphBackTL").textContent = "✨";
+    el("glyphBackBR").textContent = "✨";
+    el("badgeFront").className = "badge " + meta.cls;
+    el("badgeFront").textContent = item.level;
+    el("textFront").className = "card-text";
     el("textFront").textContent = item.q;
     el("badgeBack").className = "badge resposta";
-    el("badgeBack").textContent = "Resposta";
-    el("textBack").textContent = item.a;
+    el("badgeBack").textContent = "Reação";
+    el("textBack").textContent = meta.note;
     el("hintBack").textContent = "Toque para voltar";
-  } else {
+  } else if(mode === "td"){
+    el("modeLabel").textContent = "VERDADE OU DESAFIO";
+    el("subline").textContent = "Toque na carta e cumpra o combinado";
     const isVerdade = item.kind === "Verdade";
     el("glyphFrontTL").textContent = isVerdade ? "♥" : "⚡";
     el("glyphFrontBR").textContent = isVerdade ? "♥" : "⚡";
@@ -615,57 +706,115 @@ function render(){
     el("glyphBackBR").textContent = "🎉";
     el("badgeFront").className = "badge " + (isVerdade ? "verdade" : "desafio");
     el("badgeFront").textContent = item.kind;
+    el("textFront").className = "card-text";
     el("textFront").textContent = item.text;
     el("badgeBack").className = "badge " + (isVerdade ? "verdade" : "desafio");
     el("badgeBack").textContent = "Concluído";
     el("textBack").textContent = isVerdade ? "Respeito à sua verdade! 🙌" : "Missão cumprida! 🔥";
     el("hintBack").textContent = "Toque para voltar";
+  } else {
+    el("modeLabel").textContent = "MÍMICA";
+    el("subline").textContent = "Um mimica a palavra, o outro tenta adivinhar!";
+    el("glyphFrontTL").textContent = "🎭";
+    el("glyphFrontBR").textContent = "🎭";
+    el("badgeFront").className = "badge mimica";
+    el("badgeFront").textContent = item.cat;
+    el("textFront").className = "card-text big";
+    el("textFront").textContent = item.w;
   }
+ 
+  updateTimerVisibility();
 }
-
+ 
 function flip(){
+  if(mode === "mimica") return;
   flipped = !flipped;
   card.classList.toggle("flipped", flipped);
 }
-
+ 
 function next(){
   const deck = currentDeck();
   flipped = false;
   card.classList.remove("flipped");
+  resetTimer();
   idx++;
   if(idx >= deck.length){
     idx = 0;
-    if(mode === "perguntas") deckP = shuffle([...perguntas]);
-    else deckT = shuffle([...tdDeck]);
+    reshuffleCurrent(false);
     showToast("Baralho reiniciado e embaralhado ✨");
   }
   card.classList.add("pulse");
   setTimeout(()=>card.classList.remove("pulse"), 400);
   render();
 }
-
+ 
+function reshuffleCurrent(toast){
+  if(mode === "perguntas") deckP = shuffle([...perguntas]);
+  else if(mode === "td") deckT = shuffle([...tdDeck]);
+  else deckM = shuffle([...mimica]);
+  if(toast) showToast("Baralho embaralhado 🔀");
+}
+ 
 function reshuffle(){
   flipped = false;
   card.classList.remove("flipped");
   idx = 0;
-  if(mode === "perguntas") deckP = shuffle([...perguntas]);
-  else deckT = shuffle([...tdDeck]);
-  showToast("Baralho embaralhado 🔀");
+  resetTimer();
+  reshuffleCurrent(true);
   render();
 }
-
+ 
 function showToast(msg){
   toastEl.textContent = msg;
   toastEl.classList.add("show");
   clearTimeout(showToast._t);
   showToast._t = setTimeout(()=>toastEl.classList.remove("show"), 1600);
 }
-
+ 
+/* ---------- TIMER (mímica) ---------- */
+function updateTimerVisibility(){
+  el("timerRow").classList.toggle("show", mode === "mimica");
+}
+ 
+function resetTimer(){
+  clearInterval(timerInterval);
+  timerInterval = null;
+  timerRunning = false;
+  timerRemaining = 60;
+  el("timerCount").textContent = "60";
+  el("timerBtn").textContent = "▶ Iniciar 60s";
+}
+ 
+function toggleTimer(){
+  if(timerRunning){
+    resetTimer();
+    return;
+  }
+  timerRunning = true;
+  timerRemaining = 60;
+  el("timerCount").textContent = timerRemaining;
+  el("timerBtn").textContent = "⏸ Reiniciar";
+  timerInterval = setInterval(()=>{
+    timerRemaining--;
+    el("timerCount").textContent = timerRemaining;
+    if(timerRemaining <= 0){
+      clearInterval(timerInterval);
+      timerRunning = false;
+      el("timerBtn").textContent = "▶ Iniciar 60s";
+      card.classList.add("alarm");
+      setTimeout(()=>card.classList.remove("alarm"), 1000);
+      if(navigator.vibrate) navigator.vibrate([200,100,200]);
+      showToast("Tempo esgotado! 🎭");
+    }
+  }, 1000);
+}
+ 
 /* ============ EVENTOS ============ */
 card.addEventListener("click", flip);
 el("btnNext").addEventListener("click", next);
 el("btnShuffle").addEventListener("click", reshuffle);
-
+el("timerBtn").addEventListener("click", toggleTimer);
+ 
 document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click", ()=>{
     if(tab.dataset.mode === mode) return;
@@ -675,10 +824,11 @@ document.querySelectorAll(".tab").forEach(tab=>{
     idx = 0;
     flipped = false;
     card.classList.remove("flipped");
+    resetTimer();
     render();
   });
 });
-
+ 
 /* swipe simples para avançar */
 let touchStartX = 0;
 card.addEventListener("touchstart", e => touchStartX = e.touches[0].clientX, {passive:true});
@@ -686,8 +836,9 @@ card.addEventListener("touchend", e => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   if(Math.abs(dx) > 60) next();
 }, {passive:true});
-
+ 
 render();
 </script>
 </body>
 </html>
+ 
