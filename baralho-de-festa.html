@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Baralho de Festa — Perguntas & Verdade ou Desafio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#150E2B;
+    --ink-2:#1E1338;
+    --ink-3:#2A1B4A;
+    --paper:#F6EEDF;
+    --paper-2:#EEE1C6;
+    --teal:#1F6F63;
+    --coral:#D9491F;
+    --plum:#6D3FA6;
+    --gold:#C79A4B;
+    --gold-soft:#E4C784;
+    --violet:#8B5CF6;
+    --cream:#F4EDE4;
+    --dim:#B9AED6;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 0%, #2A1B4A 0%, transparent 55%),
+      radial-gradient(circle at 85% 15%, #241640 0%, transparent 45%),
+      var(--ink);
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+  }
+
+  .app{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:env(safe-area-inset-top,18px) 16px 18px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    text-align:center;
+    padding:6px 0 14px;
+  }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.28em;
+    color:var(--gold-soft);
+    text-transform:uppercase;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:28px;
+    margin:4px 0 0;
+    letter-spacing:-.01em;
+  }
+  h1 span{color:var(--violet);}
+
+  /* ---------- TABS ---------- */
+  .tabs{
+    display:flex;
+    background:var(--ink-2);
+    border:1px solid #3A2A5C;
+    border-radius:999px;
+    padding:4px;
+    margin:16px 0 6px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:11px 8px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--dim);
+    cursor:pointer;
+    transition:all .25s ease;
+    user-select:none;
+  }
+  .tab.active{
+    background:linear-gradient(135deg,var(--violet),#6D3FA6);
+    color:#fff;
+    box-shadow:0 4px 14px rgba(139,92,246,.35);
+  }
+
+  .subline{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--dim);
+    margin:2px 0 18px;
+    min-height:16px;
+  }
+
+  /* ---------- CARD STAGE ---------- */
+  .stage{
+    position:relative;
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:380px;
+    perspective:1600px;
+  }
+
+  .deck-shadow{
+    position:absolute;
+    width:78%;
+    max-width:280px;
+    aspect-ratio:5/7;
+    border-radius:20px;
+    background:var(--paper-2);
+    border:2px solid #D8C69C;
+  }
+  .deck-shadow.s2{ transform:rotate(-7deg) translateY(10px); opacity:.55; }
+  .deck-shadow.s1{ transform:rotate(4deg) translateY(4px); opacity:.8; }
+
+  .card{
+    position:relative;
+    width:78%;
+    max-width:280px;
+    aspect-ratio:5/7;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .55s cubic-bezier(.2,.8,.25,1);
+  }
+  .card.flipped{ transform:rotateY(180deg); }
+  .card.pulse{ animation:pulse .4s ease; }
+  @keyframes pulse{ 50%{ transform:scale(.97) rotateY(var(--ry,0deg)); } }
+
+  .face{
+    position:absolute; inset:0;
+    background:var(--paper);
+    border-radius:20px;
+    backface-visibility:hidden;
+    border:2px solid var(--gold);
+    box-shadow:0 18px 40px rgba(0,0,0,.45), inset 0 0 0 6px rgba(199,154,75,.15);
+    display:flex;
+    flex-direction:column;
+    padding:16px;
+    color:var(--ink);
+  }
+  .face.back{ transform:rotateY(180deg); }
+
+  .idx{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    font-weight:700;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    line-height:1.1;
+    color:var(--ink-3);
+  }
+  .idx .glyph{ font-size:16px; margin-top:1px; }
+  .corner-tl{ align-self:flex-start; }
+  .corner-br{ align-self:flex-end; transform:rotate(180deg); margin-top:auto; }
+
+  .card-body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6px 10px;
+    gap:14px;
+  }
+  .badge{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    font-weight:700;
+    padding:5px 14px;
+    border-radius:999px;
+    text-transform:uppercase;
+  }
+  .badge.perg{ background:rgba(31,111,99,.12); color:var(--teal); }
+  .badge.verdade{ background:rgba(109,63,166,.12); color:var(--plum); }
+  .badge.desafio{ background:rgba(217,73,31,.12); color:var(--coral); }
+  .badge.resposta{ background:rgba(31,111,99,.12); color:var(--teal); }
+
+  .card-text{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:20px;
+    line-height:1.32;
+    color:var(--ink);
+  }
+  .face.back .card-text{ font-size:19px; }
+  .hint{
+    font-family:'Inter',sans-serif;
+    font-size:11.5px;
+    color:#8b7f5f;
+    margin-top:auto;
+  }
+
+  /* ---------- CONTROLS ---------- */
+  .controls{
+    margin-top:18px;
+  }
+  .progress-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--dim);
+    margin-bottom:10px;
+  }
+  .bar{
+    height:4px;
+    background:#3A2A5C;
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:16px;
+  }
+  .bar-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--violet),var(--gold));
+    border-radius:999px;
+    transition:width .3s ease;
+  }
+  .btn-row{
+    display:flex;
+    gap:10px;
+  }
+  button.act{
+    flex:1;
+    border:none;
+    border-radius:14px;
+    padding:14px 10px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  button.act:active{ transform:scale(.96); }
+  .btn-shuffle{
+    background:var(--ink-2);
+    color:var(--cream);
+    border:1px solid #3A2A5C;
+    flex:0 0 52px;
+    font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .btn-next{
+    background:linear-gradient(135deg,var(--violet),#5B34A0);
+    color:#fff;
+    box-shadow:0 8px 20px rgba(139,92,246,.3);
+  }
+
+  footer{
+    text-align:center;
+    font-size:10.5px;
+    color:#5c5480;
+    margin-top:16px;
+    letter-spacing:.04em;
+  }
+
+  .toast{
+    position:fixed;
+    left:50%; bottom:26px;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink-2);
+    border:1px solid var(--gold);
+    color:var(--cream);
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:12.5px;
+    opacity:0;
+    pointer-events:none;
+    transition:all .3s ease;
+    z-index:20;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="eyebrow">Jogo de Cartas</div>
+    <h1>Baralho de <span>Festa</span></h1>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-mode="perguntas">Perguntas</div>
+    <div class="tab" data-mode="td">Verdade ou Desafio</div>
+  </div>
+  <div class="subline" id="subline">Toque na carta para revelar a resposta</div>
+
+  <div class="stage">
+    <div class="deck-shadow s2"></div>
+    <div class="deck-shadow s1"></div>
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="idx corner-tl"><span id="numFrontTL">1</span><span class="glyph" id="glyphFrontTL">?</span></div>
+        <div class="card-body">
+          <div class="badge perg" id="badgeFront">Geografia</div>
+          <div class="card-text" id="textFront">Carregando...</div>
+        </div>
+        <div class="idx corner-br"><span id="numFrontBR">1</span><span class="glyph" id="glyphFrontBR">?</span></div>
+      </div>
+      <div class="face back">
+        <div class="idx corner-tl"><span id="numBackTL">1</span><span class="glyph" id="glyphBackTL">✓</span></div>
+        <div class="card-body">
+          <div class="badge resposta" id="badgeBack">Resposta</div>
+          <div class="card-text" id="textBack">—</div>
+          <div class="hint" id="hintBack">Toque para voltar</div>
+        </div>
+        <div class="idx corner-br"><span id="numBackBR">1</span><span class="glyph" id="glyphBackBR">✓</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="progress-row">
+      <span id="counter">Carta 1 / 100</span>
+      <span id="modeLabel">PERGUNTAS</span>
+    </div>
+    <div class="bar"><div class="bar-fill" id="barFill" style="width:1%"></div></div>
+    <div class="btn-row">
+      <button class="act btn-shuffle" id="btnShuffle" title="Embaralhar">🔀</button>
+      <button class="act btn-next" id="btnNext">Próxima carta →</button>
+    </div>
+  </div>
+
+  <footer>Deslize, toque e jogue — 100 perguntas · 100 cartas de verdade ou desafio</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DADOS ============ */
+const perguntas = [
+{c:"Geografia",q:"Qual é o maior país do mundo em área territorial?",a:"Rússia"},
+{c:"Geografia",q:"Qual é o rio mais longo do mundo?",a:"Rio Nilo"},
+{c:"Geografia",q:"Qual é a capital da Austrália?",a:"Camberra"},
+{c:"Geografia",q:"Em qual continente fica o Egito?",a:"África"},
+{c:"Geografia",q:"Qual é o menor país do mundo?",a:"Vaticano"},
+{c:"Geografia",q:"Qual é o maior oceano do planeta?",a:"Oceano Pacífico"},
+{c:"Geografia",q:"Qual é a cordilheira mais extensa do mundo?",a:"Cordilheira dos Andes"},
+{c:"Geografia",q:"Quantos países fazem fronteira com o Brasil?",a:"10 países"},
+{c:"Geografia",q:"Qual é o maior deserto quente do mundo?",a:"Deserto do Saara"},
+{c:"Geografia",q:"Qual país europeu tem o formato de uma bota?",a:"Itália"},
+{c:"História",q:"Em que ano começou a Segunda Guerra Mundial?",a:"1939"},
+{c:"História",q:"Quem foi o primeiro presidente do Brasil?",a:"Marechal Deodoro da Fonseca"},
+{c:"História",q:"Em que ano os portugueses chegaram ao Brasil?",a:"1500"},
+{c:"História",q:"Qual civilização construiu as pirâmides de Gizé?",a:"Os egípcios antigos"},
+{c:"História",q:"Em que ano caiu o Muro de Berlim?",a:"1989"},
+{c:"História",q:"Qual foi a primeira capital do Brasil?",a:"Salvador"},
+{c:"História",q:"Quem assinou a Lei Áurea, que aboliu a escravidão no Brasil?",a:"A Princesa Isabel"},
+{c:"História",q:"Em que século viveu Napoleão Bonaparte?",a:"Séculos XVIII e XIX"},
+{c:"História",q:"Qual evento é considerado o marco do início da Idade Moderna?",a:"A Queda de Constantinopla, em 1453"},
+{c:"História",q:"Qual era o nome do navio que trouxe Cabral ao Brasil?",a:"A esquadra era liderada pela nau capitânia de Cabral"},
+{c:"Ciência",q:"Qual é o planeta mais próximo do Sol?",a:"Mercúrio"},
+{c:"Ciência",q:"Qual é o elemento químico mais abundante no universo?",a:"Hidrogênio"},
+{c:"Ciência",q:"Quantos ossos tem o corpo humano adulto?",a:"206 ossos"},
+{c:"Ciência",q:"Qual é a velocidade aproximada da luz?",a:"Cerca de 300 mil km por segundo"},
+{c:"Ciência",q:"Quem propôs a Teoria da Relatividade?",a:"Albert Einstein"},
+{c:"Ciência",q:"Qual é o maior órgão do corpo humano?",a:"A pele"},
+{c:"Ciência",q:"Qual gás os humanos exalam ao respirar?",a:"Gás carbônico (CO2)"},
+{c:"Ciência",q:"Qual é a fórmula química da água?",a:"H2O"},
+{c:"Ciência",q:"Quantos planetas existem no Sistema Solar?",a:"8 planetas"},
+{c:"Ciência",q:"Qual é o animal terrestre mais rápido do mundo?",a:"O guepardo"},
+{c:"Cinema & Séries",q:"Quem dirigiu o filme \"Tubarão\"?",a:"Steven Spielberg"},
+{c:"Cinema & Séries",q:"Em qual trilogia aparece o personagem Frodo Bolseiro?",a:"O Senhor dos Anéis"},
+{c:"Cinema & Séries",q:"Qual ator interpretou o Coringa no filme de 2019?",a:"Joaquin Phoenix"},
+{c:"Cinema & Séries",q:"Qual série retrata a cidade fictícia de Hawkins?",a:"Stranger Things"},
+{c:"Cinema & Séries",q:"Qual filme venceu o Oscar de Melhor Filme em 2020?",a:"Parasita"},
+{c:"Cinema & Séries",q:"Quem interpreta Tony Stark nos filmes da Marvel?",a:"Robert Downey Jr."},
+{c:"Cinema & Séries",q:"Qual professor de Hogwarts foi interpretado por Alan Rickman?",a:"Severo Snape"},
+{c:"Cinema & Séries",q:"Em que ano foi lançado o primeiro filme de Toy Story?",a:"1995"},
+{c:"Cinema & Séries",q:"Qual estúdio de animação criou \"Divertida Mente\"?",a:"Pixar"},
+{c:"Cinema & Séries",q:"Qual é o apelido do líder do grupo em \"La Casa de Papel\"?",a:"Professor"},
+{c:"Música",q:"Qual banda gravou o álbum \"Abbey Road\"?",a:"The Beatles"},
+{c:"Música",q:"Quem é conhecida como a \"Rainha do Pop\"?",a:"Madonna"},
+{c:"Música",q:"Qual cantor lançou o álbum \"Thriller\"?",a:"Michael Jackson"},
+{c:"Música",q:"Quantas cordas tem um violão clássico?",a:"6 cordas"},
+{c:"Música",q:"Qual gênero musical nasceu no Rio de Janeiro?",a:"Samba"},
+{c:"Música",q:"Qual instrumento acompanha a sanfona e o triângulo no forró?",a:"O zabumba"},
+{c:"Música",q:"Qual banda brasileira canta \"Tempo Perdido\"?",a:"Legião Urbana"},
+{c:"Música",q:"Qual famoso festival de música dos EUA aconteceu em 1969?",a:"Woodstock"},
+{c:"Música",q:"Quantas teclas tem um piano padrão?",a:"88 teclas"},
+{c:"Música",q:"Qual cantor brasileiro ficou famoso com \"Ai Se Eu Te Pego\"?",a:"Michel Teló"},
+{c:"Esportes",q:"Quantos jogadores um time de futebol tem em campo?",a:"11 jogadores"},
+{c:"Esportes",q:"Quantas vezes o Brasil já foi campeão da Copa do Mundo?",a:"5 vezes"},
+{c:"Esportes",q:"Em qual esporte se usa o termo \"ace\"?",a:"Tênis"},
+{c:"Esportes",q:"Qual país sediou as Olimpíadas de 2016?",a:"Brasil"},
+{c:"Esportes",q:"Quantos quartos tem uma partida oficial de basquete na NBA?",a:"4 quartos"},
+{c:"Esportes",q:"Qual é o nome do troféu da Copa do Mundo de futebol?",a:"Taça FIFA"},
+{c:"Esportes",q:"Em qual esporte Ayrton Senna se destacou?",a:"Fórmula 1"},
+{c:"Esportes",q:"Quantos pontos vale uma cesta de três no basquete?",a:"3 pontos"},
+{c:"Esportes",q:"Qual país tem o maior número de medalhas olímpicas da história?",a:"Estados Unidos"},
+{c:"Esportes",q:"Qual é o número máximo de sets em uma partida de vôlei?",a:"5 sets"},
+{c:"Literatura",q:"Quem escreveu \"Dom Casmurro\"?",a:"Machado de Assis"},
+{c:"Literatura",q:"Quem escreveu o romance \"1984\"?",a:"George Orwell"},
+{c:"Literatura",q:"Qual autor criou o detetive Sherlock Holmes?",a:"Arthur Conan Doyle"},
+{c:"Literatura",q:"Quem escreveu \"Cem Anos de Solidão\"?",a:"Gabriel García Márquez"},
+{c:"Literatura",q:"Qual é o nome do bruxo criado por J.K. Rowling?",a:"Harry Potter"},
+{c:"Tecnologia",q:"Quem fundou a Microsoft?",a:"Bill Gates"},
+{c:"Tecnologia",q:"O que significa a sigla \"www\"?",a:"World Wide Web"},
+{c:"Tecnologia",q:"Qual empresa criou o iPhone?",a:"Apple"},
+{c:"Tecnologia",q:"Qual linguagem de programação é a mais usada em navegadores web?",a:"JavaScript"},
+{c:"Tecnologia",q:"O que significa a sigla \"IA\"?",a:"Inteligência Artificial"},
+{c:"Animais",q:"Qual é o maior mamífero do mundo?",a:"A baleia-azul"},
+{c:"Animais",q:"Quantos corações tem um polvo?",a:"3 corações"},
+{c:"Animais",q:"Qual é a ave símbolo nacional do Brasil?",a:"O sabiá-laranjeira"},
+{c:"Animais",q:"Qual é o único mamífero capaz de voar de verdade?",a:"O morcego"},
+{c:"Animais",q:"Qual é o maior réptil vivo do mundo?",a:"O crocodilo-de-água-salgada"},
+{c:"Curiosidades",q:"Quantos minutos tem uma hora?",a:"60 minutos"},
+{c:"Curiosidades",q:"Qual cor surge da mistura de azul e amarelo?",a:"Verde"},
+{c:"Curiosidades",q:"Quantos lados tem um hexágono?",a:"6 lados"},
+{c:"Curiosidades",q:"Qual é o único metal líquido à temperatura ambiente?",a:"Mercúrio"},
+{c:"Curiosidades",q:"Quantas letras tem o alfabeto português atual?",a:"26 letras"},
+{c:"Curiosidades",q:"Qual é a moeda oficial do Japão?",a:"Iene"},
+{c:"Curiosidades",q:"Quantos dias tem um ano bissexto?",a:"366 dias"},
+{c:"Curiosidades",q:"Qual é o maior deserto de gelo do mundo?",a:"A Antártida"},
+{c:"Curiosidades",q:"Quantas cores tem o arco-íris?",a:"7 cores"},
+{c:"Curiosidades",q:"Quem foi o primeiro homem a pisar na Lua?",a:"Neil Armstrong"},
+{c:"Brasil",q:"Qual é a capital do Brasil?",a:"Brasília"},
+{c:"Brasil",q:"Quem projetou os principais prédios de Brasília?",a:"Oscar Niemeyer"},
+{c:"Brasil",q:"Qual é o maior estado brasileiro em área?",a:"Amazonas"},
+{c:"Brasil",q:"Em quais meses o Carnaval costuma acontecer?",a:"Entre fevereiro e março, geralmente"},
+{c:"Brasil",q:"Qual estátua fica no alto do Corcovado, no Rio de Janeiro?",a:"O Cristo Redentor"},
+{c:"Brasil",q:"Qual é a moeda oficial do Brasil?",a:"Real"},
+{c:"Brasil",q:"Quantos estados tem o Brasil, sem contar o Distrito Federal?",a:"26 estados"},
+{c:"Brasil",q:"Qual é o prato típico feito de feijão preto com carnes?",a:"Feijoada"},
+{c:"Brasil",q:"Qual escritor fundou a Academia Brasileira de Letras?",a:"Machado de Assis"},
+{c:"Brasil",q:"Qual é o maior bioma brasileiro em extensão?",a:"Amazônia"},
+{c:"Comida",q:"De qual país é originária a pizza?",a:"Itália"},
+{c:"Comida",q:"Qual fruta é usada para fazer vinho?",a:"Uva"},
+{c:"Comida",q:"Qual é o ingrediente principal do guacamole?",a:"Abacate"},
+{c:"Comida",q:"De qual país o sushi é originário?",a:"Japão"},
+{c:"Comida",q:"Qual doce brasileiro é feito de leite condensado, chocolate e granulado?",a:"Brigadeiro"}
+];
+
+const verdades = [
+"Qual foi a mentira mais boba que você já contou?",
+"Já fingiu estar doente para faltar a um compromisso?",
+"Qual é o seu maior medo bobo?",
+"Já teve uma paixão platônica por alguém do grupo?",
+"Qual foi a coisa mais vergonhosa que você já fez em público?",
+"Já dormiu durante uma aula ou reunião importante?",
+"Qual é o aplicativo que você mais usa no celular?",
+"Já mentiu para os pais sobre onde estava?",
+"Qual foi seu apelido mais estranho na infância?",
+"Já chorou assistindo a um filme ou série?",
+"Qual é a comida que você finge gostar, mas na verdade odeia?",
+"Já terminou uma amizade por mensagem de texto?",
+"Qual foi seu maior \"fora\" (quando alguém te rejeitou)?",
+"Já stalkeou o perfil de alguém nas redes sociais por curiosidade?",
+"Qual é a sua maior mania estranha?",
+"Já fingiu não ver alguém para não precisar cumprimentar?",
+"Qual foi a pior nota que você já tirou na escola?",
+"Já colou em uma prova?",
+"Qual é o seu maior arrependimento até hoje?",
+"Já falou mal de alguém e essa pessoa acabou ouvindo?",
+"Qual é a coisa mais cara que você já quebrou?",
+"Já se apaixonou por alguém à primeira vista?",
+"Qual é o seu talento mais inútil?",
+"Já fingiu gostar de um presente que na verdade odiou?",
+"Qual foi a última vez que você chorou de verdade?",
+"Já teve vergonha de dançar em público?",
+"Qual é a série ou filme que você reassiste sem cansar?",
+"Já perdeu um compromisso importante por dormir demais?",
+"Qual foi o presente mais estranho que você já ganhou?",
+"Já enviou uma mensagem para a pessoa errada por engano?",
+"Qual é a sua maior insegurança?",
+"Já fingiu estar em outro lugar para não encontrar alguém?",
+"Qual foi a mentira mais elaborada que você já contou?",
+"Já teve vontade de largar tudo e recomeçar em outra cidade?",
+"Qual é o hábito que você mais quer largar?",
+"Já brigou feio com um amigo próximo por bobagem?",
+"Qual foi a pior viagem que você já fez?",
+"Já disse \"eu concordo\" só para não discutir?",
+"Qual é o seu maior vício em algo bobo, tipo série ou doce?",
+"Já fingiu entender um assunto no meio de uma conversa?",
+"Qual foi a última vez que você mentiu para si mesmo sobre algo?",
+"Já teve inveja de um amigo próximo?",
+"Qual é a sua pior lembrança de infância?",
+"Já fingiu estar bem quando na verdade não estava?",
+"Qual foi o momento mais constrangedor da sua vida escolar?",
+"Já culpou outra pessoa por algo que você fez?",
+"Qual é a sua maior fobia?",
+"Já saiu de uma festa sem se despedir de ninguém?",
+"Qual foi a última vez que você teve muita vergonha de algo?",
+"Já fingiu estar ocupado só para não sair com alguém?"
+];
+
+const desafios = [
+"Fale um trava-língua três vezes rápido sem errar.",
+"Imite o jeito de falar de alguém do grupo até adivinharem quem é.",
+"Cante o refrão de uma música só com \"lá lá lá\".",
+"Dance por 20 segundos sem música.",
+"Faça 10 polichinelos agora mesmo.",
+"Fale seu nome completo de trás para frente.",
+"Imite um animal escolhido pelo grupo por 15 segundos.",
+"Conte uma piada, mesmo que seja ruim.",
+"Fale como se estivesse em câmera lenta por 30 segundos.",
+"Grave um áudio cantando \"parabéns pra você\" e mande pro último contato do celular.",
+"Faça uma pose de ioga e segure por 15 segundos.",
+"Fale um elogio sincero para cada pessoa do grupo.",
+"Imite o sotaque de outra região por 1 minuto.",
+"Ande de costas até o outro lado da sala.",
+"Faça uma careta e segure por 10 segundos.",
+"Conte até 20 em outro idioma.",
+"Faça 5 flexões, ou tente o máximo possível.",
+"Cante uma música infantil inteira.",
+"Narre o que está acontecendo agora como um repórter de TV.",
+"Fale três coisas pelas quais você é grato hoje.",
+"Faça uma dublagem de um trecho de filme famoso.",
+"Deixe o grupo escrever algo na sua mão com caneta.",
+"Fale o alfabeto de trás para frente.",
+"Imite o andar de um robô por 20 segundos.",
+"Conte a última vez que você riu muito, com detalhes.",
+"Imite um professor ou professora que você já teve.",
+"Fale por 30 segundos sobre um assunto aleatório sem parar.",
+"Deixe alguém escolher sua próxima foto de perfil por um dia.",
+"Cante os parabéns em outro idioma.",
+"Faça uma prancha (exercício) e aguente 20 segundos.",
+"Conte um segredo bobo e engraçado, nada sério.",
+"Imite a forma de rir de alguém do grupo.",
+"Faça uma dancinha de rede social, mesmo sem saber os passos.",
+"Invente e conte uma história curta em 30 segundos.",
+"Fale seu horóscopo do dia de forma bem dramática.",
+"Vire estátua e não se mexa por 30 segundos.",
+"Envie uma mensagem de bom dia para alguém que você não fala há tempos.",
+"Apresente as notícias do dia como se fosse um jornalista.",
+"Imite o som de três animais diferentes.",
+"Faça uma coreografia improvisada de 15 segundos.",
+"Fale um trocadilho, mesmo que seja péssimo.",
+"Descreva seu dia perfeito em 30 segundos sem pausar.",
+"Faça uma pose de super-herói e segure por 10 segundos.",
+"Cante uma música trocando todas as palavras por \"banana\".",
+"Imite o jeito de andar de uma passarela de moda.",
+"Fale três vezes rápido: \"o rato roeu a roupa do rei de Roma\".",
+"Faça uma saudação formal e exagerada para cada pessoa do grupo.",
+"Conte uma curiosidade estranha que você sabe.",
+"Faça uma pose de capa de revista e segure por 10 segundos.",
+"Finja estar em uma entrevista de emprego para ser \"Rei ou Rainha da Festa\"."
+];
+
+const tdDeck = verdades.map(t => ({kind:"Verdade", text:t}))
+  .concat(desafios.map(t => ({kind:"Desafio", text:t})));
+
+/* ============ ESTADO ============ */
+let mode = "perguntas";
+let deckP = shuffle([...perguntas]);
+let deckT = shuffle([...tdDeck]);
+let idx = 0;
+let flipped = false;
+
+const el = id => document.getElementById(id);
+const card = el("card");
+const toastEl = el("toast");
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function currentDeck(){ return mode === "perguntas" ? deckP : deckT; }
+
+function render(){
+  const deck = currentDeck();
+  const item = deck[idx];
+  const num = idx + 1;
+  const total = deck.length;
+
+  el("counter").textContent = `Carta ${num} / ${total}`;
+  el("modeLabel").textContent = mode === "perguntas" ? "PERGUNTAS" : "VERDADE OU DESAFIO";
+  el("barFill").style.width = (num/total*100) + "%";
+  el("subline").textContent = mode === "perguntas"
+    ? "Toque na carta para revelar a resposta"
+    : "Toque na carta e cumpra o combinado";
+
+  [el("numFrontTL"), el("numFrontBR"), el("numBackTL"), el("numBackBR")]
+    .forEach(n => n.textContent = num);
+
+  if(mode === "perguntas"){
+    el("glyphFrontTL").textContent = "?";
+    el("glyphFrontBR").textContent = "?";
+    el("glyphBackTL").textContent = "✓";
+    el("glyphBackBR").textContent = "✓";
+    el("badgeFront").className = "badge perg";
+    el("badgeFront").textContent = item.c;
+    el("textFront").textContent = item.q;
+    el("badgeBack").className = "badge resposta";
+    el("badgeBack").textContent = "Resposta";
+    el("textBack").textContent = item.a;
+    el("hintBack").textContent = "Toque para voltar";
+  } else {
+    const isVerdade = item.kind === "Verdade";
+    el("glyphFrontTL").textContent = isVerdade ? "♥" : "⚡";
+    el("glyphFrontBR").textContent = isVerdade ? "♥" : "⚡";
+    el("glyphBackTL").textContent = "🎉";
+    el("glyphBackBR").textContent = "🎉";
+    el("badgeFront").className = "badge " + (isVerdade ? "verdade" : "desafio");
+    el("badgeFront").textContent = item.kind;
+    el("textFront").textContent = item.text;
+    el("badgeBack").className = "badge " + (isVerdade ? "verdade" : "desafio");
+    el("badgeBack").textContent = "Concluído";
+    el("textBack").textContent = isVerdade ? "Respeito à sua verdade! 🙌" : "Missão cumprida! 🔥";
+    el("hintBack").textContent = "Toque para voltar";
+  }
+}
+
+function flip(){
+  flipped = !flipped;
+  card.classList.toggle("flipped", flipped);
+}
+
+function next(){
+  const deck = currentDeck();
+  flipped = false;
+  card.classList.remove("flipped");
+  idx++;
+  if(idx >= deck.length){
+    idx = 0;
+    if(mode === "perguntas") deckP = shuffle([...perguntas]);
+    else deckT = shuffle([...tdDeck]);
+    showToast("Baralho reiniciado e embaralhado ✨");
+  }
+  card.classList.add("pulse");
+  setTimeout(()=>card.classList.remove("pulse"), 400);
+  render();
+}
+
+function reshuffle(){
+  flipped = false;
+  card.classList.remove("flipped");
+  idx = 0;
+  if(mode === "perguntas") deckP = shuffle([...perguntas]);
+  else deckT = shuffle([...tdDeck]);
+  showToast("Baralho embaralhado 🔀");
+  render();
+}
+
+function showToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>toastEl.classList.remove("show"), 1600);
+}
+
+/* ============ EVENTOS ============ */
+card.addEventListener("click", flip);
+el("btnNext").addEventListener("click", next);
+el("btnShuffle").addEventListener("click", reshuffle);
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    if(tab.dataset.mode === mode) return;
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    mode = tab.dataset.mode;
+    idx = 0;
+    flipped = false;
+    card.classList.remove("flipped");
+    render();
+  });
+});
+
+/* swipe simples para avançar */
+let touchStartX = 0;
+card.addEventListener("touchstart", e => touchStartX = e.touches[0].clientX, {passive:true});
+card.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(dx) > 60) next();
+}, {passive:true});
+
+render();
+</script>
+</body>
+</html>
